@@ -1,53 +1,43 @@
-name: Flutter Web Build
+name: Build and Deploy Flutter Web to Vercel
 
 on:
   push:
     branches:
-      - main # Trigger on push to the main branch
-  pull_request:
-    branches:
-      - main # Trigger on pull request targeting main
+      - main   # or whichever branch you want to deploy
 
 jobs:
   build:
-    # Use an Ubuntu runner for the GitHub Action
     runs-on: ubuntu-latest
 
     steps:
-      - name: 1. ⚙️ Checkout Repository
-        # Action to check out the code
-        uses: actions/checkout@v4
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: 2. 🐦 Setup Flutter Environment
-        # Action to install Flutter and configure the environment
+      # Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable' # Use the stable channel
-          # If your project requires a specific version, you can specify it here:
-          # flutter-version: '3.10.0'
+          flutter-version: '3.24.0'   # pick your Flutter version
+          channel: 'stable'
 
-      - name: 3. 🖥️ Enable Web Support
-        # Ensure the runner has web support enabled
+      # Enable web
+      - name: Enable Flutter Web
         run: flutter config --enable-web
 
-      - name: 4. 📦 Install Dependencies
-        # Get all packages defined in pubspec.yaml
+      # Get dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      # --- Optional: Run Tests ---
-      - name: 5. 🧪 Run Tests (Optional)
-        run: flutter test
-
-      - name: 6. 🌐 Build Flutter Web
-        # The main build command for web. This generates the production files.
+      # Build web app
+      - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: 7. 🎁 Archive Web Build Artifact
-        # Upload the generated build files (the 'web' output directory)
-        # The built files are located in the 'build/web' directory.
-        uses: actions/upload-artifact@v4
+      # Deploy to Vercel
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
         with:
-          name: flutter-web-build
-          path: build/web/
-          # Retention period for the artifact (e.g., 5 days)
-          retention-days: 5
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./build/web
