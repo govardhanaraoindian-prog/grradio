@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart'; // Import Hive
 import 'package:http/http.dart' as http; // Use the http package
 
 import 'radiostation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // IMPORTANT: Use your deployed Render URL here.
 const String _baseUrl = 'https://radio-backend-nysq.onrender.com';
@@ -23,13 +24,29 @@ class RadioStationServiceAPI {
     final box = await _getBox();
     return box.values.toList();
   }
+  static String get apiBaseUrl {
+    // 1. Try to get from compile-time flag (Vercel Build Command)
+    const fromEnv = String.fromEnvironment('API_BASE_URL');
+    if (fromEnv.isNotEmpty) return fromEnv;
 
+    // 2. Try to get from .env file (Local development)
+    return dotenv.env['API_BASE_URL'] ?? 'http://localhost:8000';
+  }
+  static bool get isProduction {
+    const env = String.fromEnvironment('APP_ENV');
+    if (env.isNotEmpty) return env == 'production';
+
+    return dotenv.env['APP_ENV'] == 'production';
+  }
   // 💡 MODIFIED: Accept only 'page' and 'limit' to support sequential fetching
   Future<List<RadioStation>> fetchRadioStations({
     int page = 1,
     int limit = 50, // Use a reasonable default limit per page
     String? language,
   }) async {
+    _baseUrl = apiBaseUrl;
+    print("Running in $_baseUrl mode");
+
     final Map<String, dynamic> queryParams = {
       'page': page.toString(),
       'limit': limit.toString(),

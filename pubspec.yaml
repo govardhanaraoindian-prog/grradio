@@ -35,6 +35,8 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   web: ^1.0.0
   flutter_bootstrap: ^2.0.0
+  flutter_dotenv: ^6.0.1
+
 
 # pubspec.yaml
 
@@ -50,7 +52,7 @@ flutter:
 
   assets:
     - assets/images/ # Ensure this path includes your logo image
-
+    - .env
 flutter_native_splash:
   # Color of the background
   color: "#FFFFFF" # Use a color that matches your app's theme (e.g., white)
