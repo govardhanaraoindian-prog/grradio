@@ -40,8 +40,10 @@ jobs:
       # Deploy to Vercel using official CLI
       - name: Deploy to Vercel
         run: |
+          git config --global user.email "govardhanarao.indian@gmail.com"
+          git config --global user.name "Govardhana Rao"
           npx vercel --prod \
             --token ${{ secrets.VERCEL_TOKEN }} \
             --scope ${{ secrets.VERCEL_ORG_ID }} \
-            --confirm \
+            --yes \
             --cwd ./build/web
