@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "buildCommand": "git clone https://github.com/flutter/flutter.git -b stable && export PATH=\"\$PATH:\$PWD/flutter/bin\" && flutter config --no-analytics && flutter build web --release --web-renderer canvaskit --dart-define=API_BASE_URL=\$API_BASE_URL --dart-define=APP_ENV=\$VERCEL_ENV --no-pub",
+  "cleanUrls": false
+}
