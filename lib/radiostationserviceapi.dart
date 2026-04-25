@@ -44,8 +44,8 @@ class RadioStationServiceAPI {
     int limit = 50, // Use a reasonable default limit per page
     String? language,
   }) async {
-    _baseUrl = apiBaseUrl;
-    print("Running in $_baseUrl mode");
+    String baseURL = apiBaseUrl;
+    print("Running in $baseURL mode");
 
     final Map<String, dynamic> queryParams = {
       'page': page.toString(),
@@ -58,7 +58,7 @@ class RadioStationServiceAPI {
     }
 
     // Construct the URI with query parameters for pagination
-    final uri = Uri.parse('$_baseUrl$_apiEndpoint').replace(
+    final uri = Uri.parse('$baseURL$_apiEndpoint').replace(
       queryParameters: {'page': page.toString(), 'limit': limit.toString()},
     );
 
