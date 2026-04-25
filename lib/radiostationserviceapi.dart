@@ -28,7 +28,6 @@ class RadioStationServiceAPI {
     // 1. Try to get from compile-time flag (Vercel Build Command)
     const fromEnv = String.fromEnvironment('API_BASE_URL');
     if (fromEnv.isNotEmpty) return fromEnv;
-
     // 2. Try to get from .env file (Local development)
     return dotenv.env['API_BASE_URL'] ?? 'http://localhost:8000';
   }
